@@ -54,9 +54,20 @@
 			var Application = angular.module('Application', ['ngGrid', 'ui.bootstrap']);
 			var Config = {};
 
+			//url parameter parser
+			function getParameterByName(name) {
+			    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			        results = regex.exec(location.search);
+			    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+			}
+
+			//initialization broadcasts
 			$(document).ready(function () {
-				transit.addAppend('frame', window.frameElement.id);
-				transit.broadcast('startup', window.frameElement.id);
+				var gridID = getParameterByName('gridID');
+				
+				transit.addAppend('frame', gridID);
+				transit.broadcast('startup', gridID);
 			});
 		</script>
 		<script type="text/javascript" src="TemplatesService.js"></script>

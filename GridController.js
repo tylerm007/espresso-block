@@ -214,6 +214,7 @@ Application.controller('GridController', [
 					current[index].editableCellTemplate = Templates.get('foreignKey', $scope.foreignColumns[definition.field]);
 				}
 			});
+			Transit.broadcast('EventColumnsRefreshed', current);
 		}, true);
 
 		$scope.$on('AuthUpdate', function (event, auth) {

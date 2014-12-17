@@ -94,7 +94,7 @@
 						<button ng-click="controls.runSearch(filters);">Run</button>
 					</div>
 				</div>
-				<div class="gridStyle" ng-grid="options"></div>
+				<div class="gridStyle grid" ng-grid="options"></div>
 				<div class="controls-box controls-bottom" ng-if="config.controlBox == 'bottom'">
 					<div class="filters" ng-if="config.controls.search" ng-show="params.filters">
 						<button ng-click="controls.addFilter();">Add Filter</button>
@@ -110,6 +110,7 @@
 					</div>
 				</div>
 				<div class="grid-alert-box {{alertMessage && 'display'}}">{{alertMessage}}</div>
+				<style ng-if="rawCSS">{{rawCSS}}</style>
 			</div>
 		</div>
 	</body>

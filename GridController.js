@@ -225,6 +225,7 @@ Application.controller('GridController', [
 				angular.forEach($scope.table.columns, function (column, index) {
 					$scope.table.named = _.indexBy($scope.table.columns, 'name');
 				});
+				Transit.broadcast('GridReady', $scope.frameState());
 			});
 		});
 
@@ -405,7 +406,6 @@ Application.controller('GridController', [
 				$scope.setRowAction(data.index, 'UPDATE', false);
 			}
 			Transit.broadcast('EventRowEdit', data);
-			console.log(event.targetScope.row.entity);
 		});
 		$scope.replaceLocalUpdates = function (updates, summary) {
 			angular.forEach(summary, function (element, index) {
@@ -438,14 +438,13 @@ Application.controller('GridController', [
 
 		$(window).resize(function () {
 			$scope.$evalAsync(function () {
-				console.log($('.ngRow').length)
-				var controlHeight = 60
+				var controlHeight = 60;
 				var maxHeight = $scope.data.length * '30';
 				var height = $(window).height() - controlHeight;
 				if (maxHeight < height) {
 					height = maxHeight + controlHeight;
 				}
-				$('.ngGrid').height(height);
+				$('.ngGrid').height(height+10);
 			});
 		});
 
@@ -579,13 +578,18 @@ Application.controller('GridController', [
 				angular.forEach(filters, function (filter, index) {
 					//column.name + operator.prefix + filter.text + operator.suffix
 					//customers %{text}%
-					filterArr[index] = filter.column.name + filter.operator.prefix + filter.text + filter.operator.suffix;
+					var text = filter.operator.prefix + filter.text + filter.operator.suffix;
+					if (typeof filter.text === 'boolean') {
+						text = text.replace(/'/g, '');
+						console.log('here');
+					}
+						console.log(filter, text);
+					filterArr[index] = filter.column.name + text;
 				});
 				parsed += filterArr.join(' AND ');
 				$scope.getRows(Data.auth.endpoint, parsed);
 			}, 150);
 		};
-
 
 		//no expectations
 		Transit.on('ControlSave', $rootScope.controls.save);
@@ -603,7 +607,6 @@ Application.controller('GridController', [
 		});
 		//expects data to be $scope.filters object
 		Transit.on('ControlRunSearch', function (event, data) {
-			console.log('search', data);
 			$rootScope.controls.runSearch(data);
 		});
 		//expects data.index and a data.row object
@@ -614,12 +617,25 @@ Application.controller('GridController', [
 		Transit.on('ControlInsertRow', function (event, data) {
 			$scope.controls.insert(data.row);
 		});
+		//expects data to be ng-grid column definitions
+		Transit.on('ControlColumnDefinitions', function (event, data) {
+			$scope.colDefs = data;
+		});
+		//expects data to be ng-grid column definitions
+		Transit.on('ControlRawCSS', function (event, data) {
+			$scope.rawCSS = data;
+		});
+
+		$scope.frameState = function () {
+			return {
+				table: $scope.table,
+				operators: $scope.operators,
+				columns: $scope.colDefs
+			};
+		};
 
 		Transit.on('GetFrameState', function (event, data) {
-			var snapshot = {
-				table: $scope.table,
-				operators: $scope.operators
-			};
+			var snapshot = $scope.frameState();
 			Transit.broadcast(data, snapshot);
 		});
 		Transit.on('GetAllRows', function (event, data) {

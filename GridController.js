@@ -22,8 +22,8 @@ Application.controller('GridController', [
 		//operators applied to the text of a search filter
 		$rootScope.operators = [{
 				label: 'like',
-				prefix: ' LIKE %',
-				suffix: '%',
+				prefix: ' LIKE "%',
+				suffix: '%"',
 			}, {
 				label: 'greater than',
 				prefix: '>',

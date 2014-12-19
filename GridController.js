@@ -234,6 +234,7 @@ Application.controller('GridController', [
 					$scope.table.named = _.indexBy($scope.table.columns, 'name');
 				});
 				Transit.broadcast('GridReady', $scope.frameState());
+				$scope.$emit('GridReady', $scope.frameState());
 			});
 		});
 
@@ -271,6 +272,14 @@ Application.controller('GridController', [
 			},
 			columnDefs: 'colDefs'
 		};
+
+		$scope.$on('GridReady', function () {
+			angular.forEach($rootScope.config.gridOptions, function (element, index) {
+				$scope.options.ngGrid.config[index] = element;
+			});
+			$scope.options.ngGrid.init();
+		});
+
 		$scope.colDefs = [];
 
 		$scope.isPaginated = function (data) {
@@ -447,12 +456,12 @@ Application.controller('GridController', [
 		$(window).resize(function () {
 			$scope.$evalAsync(function () {
 				var controlHeight = 60;
-				var maxHeight = $scope.data.length * '30';
+				var maxHeight = $scope.data.length * '45';
 				var height = $(window).height() - controlHeight;
 				if (maxHeight < height) {
 					height = maxHeight + controlHeight;
 				}
-				$('.ngGrid').height(height+10);
+				$('.ngGrid').height(height+15);
 			});
 		});
 
@@ -554,6 +563,14 @@ Application.controller('GridController', [
 			$rootScope.params.filters = !$rootScope.params.filters;
 		};
 		$rootScope.controls.undo = function () {
+			angular.forEach($scope.originalData, function (element, index) {
+				if ($scope.isValidRow(element)) {
+					if (element['@metadata'].action && element['@metadata'].action === 'INSERT') {
+						var i = $scope.originalData.indexOf(element);
+						$scope.originalData.splice(i, 1);
+					}
+				}
+			});
 			$scope.data = angular.copy($scope.originalData);
 		};
 		$rootScope.controls.addFilter = function () {

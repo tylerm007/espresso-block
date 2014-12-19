@@ -57,7 +57,8 @@ Application.run([
 				controlBox: 'bottom',
 				globalFeedback: true,
 				css: {},
-				js: {}
+				js: {},
+				gridOptions: {}
 			};
 
 			//merge data with default configs

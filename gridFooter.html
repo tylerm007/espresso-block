@@ -6,7 +6,7 @@
 	Delete
 </button><button ng-if="config.controls.search" ng-click="controls.search();">
 	Search
-</button><button ng-if="config.controls.fetch" ng-click="controls.fetch();">
+</button><button ng-if="config.controls.fetch" class="{{!nextBatch && 'disabled'}}" ng-click="controls.fetch();">
 	Fetch More
 </button><button ng-if="config.controls.undo" ng-click="controls.undo();">
 	Undo

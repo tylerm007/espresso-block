@@ -20,35 +20,42 @@ Application.controller('GridController', [
 		$rootScope.filters = [];
 
 		//operators applied to the text of a search filter
-		$rootScope.operators = [{
+		$rootScope.operators = {
+			contains: {
 				label: 'contains',
 				prefix: ' LIKE "%',
 				suffix: '%"',
-			},{
+			},
+			starts: {
 				label: 'starts with',
 				prefix: ' LIKE "',
 				suffix: '%"',
-			},{
+			},
+			ends: {
 				label: 'ends with',
 				prefix: ' LIKE "%',
 				suffix: '"',
-			}, {
+			}, 
+			greater: {
 				label: 'greater than',
 				prefix: '>',
 				suffix: '',
-			}, {
+			},
+			less: {
 				label: 'less than',
 				prefix: '<',
 				suffix: '',
-			}, {
+			},
+			equals: {
 				label: 'equals',
 				prefix: '=\'',
 				suffix: '\'',
-			}, {
+			},
+			not: {
 				label: 'not equal',
 				prefix: '!=\'',
 				suffix: '\'',
-		}];
+		}};
 
 		$scope.$watch('data', function (current) {
 			if (current && !angular.equals(current, [])) {
@@ -102,6 +109,7 @@ Application.controller('GridController', [
 		};
 
 		$scope.refreshColDefs = function () {
+			if ($scope.isColDefSet) { return; }
 			$scope.colDefs = [];
 			if ($rootScope.config.columns) {
 				$scope.colDefs = $rootScope.config.columns;
@@ -461,6 +469,9 @@ Application.controller('GridController', [
 				if (maxHeight < height) {
 					height = maxHeight + controlHeight;
 				}
+				if (height < 200) {
+					height = 200;
+				}
 				$('.ngGrid').height(height+15);
 			});
 		});
@@ -576,7 +587,7 @@ Application.controller('GridController', [
 		$rootScope.controls.addFilter = function () {
 			$scope.filters.push({
 				column: $scope.table.columns[0],
-				operator: $rootScope.operators[0],
+				operator: $rootScope.operators.contains,
 				text: ''
 			});
 		};
@@ -606,9 +617,7 @@ Application.controller('GridController', [
 					var text = filter.operator.prefix + filter.text + filter.operator.suffix;
 					if (typeof filter.text === 'boolean') {
 						text = text.replace(/'/g, '');
-						console.log('here');
 					}
-						console.log(filter, text);
 					filterArr[index] = filter.column.name + text;
 				});
 				parsed += filterArr.join(' AND ');
@@ -642,8 +651,10 @@ Application.controller('GridController', [
 		Transit.on('ControlInsertRow', function (event, data) {
 			$scope.controls.insert(data.row);
 		});
+		$scope.isColDefSet = false;
 		//expects data to be ng-grid column definitions
 		Transit.on('ControlColumnDefinitions', function (event, data) {
+			$scope.isColDefSet = true;
 			$scope.colDefs = data;
 		});
 		//expects data to be ng-grid column definitions

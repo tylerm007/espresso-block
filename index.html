@@ -38,6 +38,7 @@
 			}
 			.body .alert-modal .modal-content{ padding: 20px; }
 			.body .disabled{ background:#FFF; cursor:not-allowed; color:#bbb; }
+			@media (max-width: 768px) { .filters-form .form-control{ width:27%; display:inline; } .filters-form .form-group{ display:inline; }}
 		</style>
 		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/ng-grid/2.0.11/ng-grid.css"/>
 
@@ -99,7 +100,7 @@
 				<div class="controls-box controls-bottom" ng-if="config.controlBox == 'bottom'">
 					<div class="filters" ng-if="config.controls.search" ng-show="params.filters">
 						<button ng-click="controls.addFilter();">Add Filter</button>
-						<div ng-repeat="filter in filters" class="form-inline">
+						<div ng-repeat="filter in filters" class="form-inline filters-form">
 							<button ng-click="controls.removeFilter($index);">-</button>
 							<div class="form-group">
 								<select class="form-control" ng-options="column.name for column in table.columns" ng-model="filter.column"></select>

@@ -1,6 +1,6 @@
 {
   "name": "espresso-block",
-  "version": "0.9.2",
+  "version": "0.9.6",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,28 @@
   "bugs": {
     "url": "https://github.com/EspressoLogicCafe/espresso-block/issues"
   },
+  "keywords": [
+    "Espresso",
+    "Logic",
+    "Espresso Logic",
+    "Espresso Demo",
+    "REST",
+    "API",
+    "RESTful",
+    "database",
+    "sql",
+    "mysql",
+    "oracle",
+    "nosql",
+    "postgres",
+    "mongo",
+    "sqlserver",
+    "mobile",
+    "reactive",
+    "iframe",
+    "grid",
+    "grids"
+  ],
   "dependencies": {
     "espresso-transit": "*",
     "espresso-grid": "*",
